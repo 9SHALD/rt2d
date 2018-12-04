@@ -149,8 +149,8 @@ file(
 IF(MAKE_TANKS)
 	add_executable(tanks
 		tanks/main.cpp
-		tanks/myentity.cpp
-		tanks/myentity.h
+		tanks/floor.cpp
+		tanks/floor.h
 		tanks/myscene.cpp
 		tanks/myscene.h
 		tanks/tank.cpp

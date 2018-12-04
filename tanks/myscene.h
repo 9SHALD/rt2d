@@ -11,7 +11,7 @@
 
 #include <rt2d/scene.h>
 
-#include "myentity.h"
+#include "floor.h"
 #include "tank.h"
 
 
@@ -29,10 +29,16 @@ public:
 	/// @return void
 	virtual void update(float deltaTime);
 
+	bool isGrounded(MyTank obj);
+
 private:
-	/// @brief the rotating square in the middle of the screen
-	MyEntity* myentity;
+	/// 2 tanks and a floor
+	MyTank* tank2;
 	MyTank* tank;
+	MyFloor* floor;
+
+	int player;
+
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
 };

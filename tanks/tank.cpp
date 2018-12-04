@@ -13,23 +13,19 @@ MyTank::~MyTank()
 
 void MyTank::update(float deltaTime)
 {
-	// ###############################################################
-	// Rotate
-	// ###############################################################
-	if (input()->getKeyDown(KeyCode::A)) {
-		this->rotation.z -= HALF_PI * deltaTime; // 90 deg/sec
-		if (this->rotation.z > TWO_PI) {
-			this->rotation.z += TWO_PI;
+
+}
+
+void MyTank::movement()
+{
+	if (position.x >= 17) {
+		if (input()->getKey(KeyCode::A)) {
+			position.x -= 1;
 		}
 	}
-	if (input()->getKeyDown(KeyCode::D)) {
-		this->rotation.z += HALF_PI * deltaTime; // 90 deg/sec
-		if (this->rotation.z > TWO_PI) {
-			this->rotation.z -= TWO_PI;
+	if (position.x <= SWIDTH - 17) {
+		if (input()->getKey(KeyCode::D)) {
+			position.x += 1;
 		}
 	}
-	/*this->rotation.z += HALF_PI * deltaTime; // 90 deg/sec
-	if (this->rotation.z > TWO_PI) {
-		this->rotation.z -= TWO_PI;
-	}*/
 }
