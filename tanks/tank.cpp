@@ -1,19 +1,28 @@
 #include "tank.h"
+#include "myscene.h"
+#include "floor.h"
+#include "barrel.h"
 
 MyTank::MyTank() : Entity()
 {
 	this->addSprite("assets/square.tga");
 	this->sprite()->color = RED;
+
+	barrel = new MyBarrel();
+	barrel->sprite()->color = this->sprite()->color;
+
+	this->addChild(barrel);
 }
 
 MyTank::~MyTank()
 {
-
+	this->removeChild(barrel);
+	delete barrel;
 }
 
 void MyTank::update(float deltaTime)
 {
-
+	barrel->sprite()->color = this->sprite()->color;
 }
 
 void MyTank::movement()
@@ -29,3 +38,10 @@ void MyTank::movement()
 		}
 	}
 }
+
+void MyTank::gravity()
+{
+	position.y += 1;
+}
+
+

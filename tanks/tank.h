@@ -2,6 +2,7 @@
 #define TANK_H
 
 #include <rt2d/entity.h>
+#include "barrel.h"
 
 class MyTank : public Entity
 {
@@ -18,7 +19,11 @@ public:
 
 	void movement();
 
+	void gravity();
+
 private:
+	
+	MyBarrel* barrel;
 	/* add your private declarations */
 };
 

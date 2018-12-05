@@ -64,17 +64,32 @@ void MyScene::update(float deltaTime)
 	// ###############################################################
 	switch (player) {
 	case 1:
-		tank->movement();
+		if (isGrounded(tank->position.y + (tank->sprite()->height() * tank->scale.y)) == 0) {
+			tank->movement();
+		}
+		
 		if (input()->getKeyDown(KeyCode::Space) ){
 			player = 2;
 		}
 		break;
 	case 2:
-		tank2->movement();
+		if (isGrounded(tank2->position.y + (tank2->sprite()->height() * tank2->scale.y)) == 0) {
+			tank2->movement();
+		}
 		if (input()->getKeyDown(KeyCode::Space) ){
 			player = 1;
 		}
 		break;
+	}
+	
+	// ###############################################################
+	// if not grounded adds gravity
+	// ###############################################################
+	if (isGrounded(tank->position.y + (tank->sprite()->height() * tank->scale.y)) == 1) {
+		tank->gravity();	
+	}
+	if (isGrounded(tank2->position.y + (tank2->sprite()->height() * tank2->scale.y)) == 1) {
+		tank2->gravity();
 	}
 
 	// ###############################################################
@@ -91,9 +106,13 @@ void MyScene::update(float deltaTime)
 	}
 }
 
-bool MyScene::isGrounded(MyTank obj)
+
+// ###############################################################
+// isGrounded checks if a object is hitting the floor
+// ###############################################################
+bool MyScene::isGrounded(int posY)
 {
-	if (obj.position.y <= (floor->position.y + floor->scale.y)) {
+	if ((posY) < (floor->position.y)) {
 		return true;
 	}
 	else {

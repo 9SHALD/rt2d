@@ -29,7 +29,7 @@ public:
 	/// @return void
 	virtual void update(float deltaTime);
 
-	bool isGrounded(MyTank obj);
+	bool isGrounded(int posY);
 
 private:
 	/// 2 tanks and a floor
