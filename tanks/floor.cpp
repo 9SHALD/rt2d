@@ -1,5 +1,6 @@
 #include "Floor.h"
 
+
 MyFloor::MyFloor() : Entity()
 {
 	this->addSprite("assets/square_filled.tga");

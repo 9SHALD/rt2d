@@ -157,6 +157,8 @@ IF(MAKE_TANKS)
 		tanks/tank.h
 		tanks/barrel.cpp
 		tanks/barrel.h
+		tanks/bullet.cpp
+		tanks/bullet.h
 	)
 	target_link_libraries(tanks
 		${ALL_GRAPHICS_LIBS}

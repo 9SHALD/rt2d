@@ -11,8 +11,11 @@
 
 #include <rt2d/scene.h>
 
-#include "floor.h"
 #include "tank.h"
+#include "floor.h"
+#include "barrel.h"
+#include "bullet.h"
+
 
 
 /// @brief The MyScene class is the Scene implementation.
@@ -30,12 +33,15 @@ public:
 	virtual void update(float deltaTime);
 
 	bool isGrounded(int posY);
+	void playerturn();
+	void resetbullet();
 
 private:
 	/// 2 tanks and a floor
 	MyTank* tank2;
 	MyTank* tank;
 	MyFloor* floor;
+	MyBullet* bullet;
 
 	int player;
 

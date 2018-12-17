@@ -1,4 +1,4 @@
-/**
+/*				*
  * This class describes MyScene behavior.
  *
  * Copyright 2015 Your Name <you@yourhost.com>
@@ -18,14 +18,25 @@ MyScene::MyScene() : Scene()
 	// the Sprite is added in Constructor of MyEntity.
 	tank = new MyTank();
 	tank->position = Point2(SWIDTH / 2, SHEIGHT / 1.5);
+
+	// tank 2
 	tank2 = new MyTank();
 	tank2->position = Point2(SWIDTH / 1.5, SHEIGHT / 1.5);
+
+	// floor
 	floor = new MyFloor();
 	floor->position = Point2(SWIDTH / 2, SHEIGHT / 1.2);
-	//sets the scale of the tanks and floor
+
+	// bullet
+	bullet = new MyBullet();
+	bullet->position = Point2(-1, -1);
+	bullet->sprite()->color = WHITE;
+	
+	// sets the scale of all objects
 	tank->scale = Point(0.2f, 0.2f);
 	tank2->scale = Point(0.2f, 0.2f);
 	floor->scale = Point((SWIDTH / 2), 0.2f);
+	bullet->scale = Point2(0.1f, 0.1f);
 	player = 1;
 
 
@@ -34,6 +45,7 @@ MyScene::MyScene() : Scene()
 	this->addChild(tank);
 	this->addChild(tank2);
 	this->addChild(floor);
+	this->addChild(bullet);
 }
 
 
@@ -60,30 +72,33 @@ void MyScene::update(float deltaTime)
 	}
 	
 	// ###############################################################
-	// Left and Right movement
+	// checks if player is grounded and if player is grounded lets them move
 	// ###############################################################
 	switch (player) {
 	case 1:
 		if (isGrounded(tank->position.y + (tank->sprite()->height() * tank->scale.y)) == 0) {
 			tank->movement();
-		}
-		
-		if (input()->getKeyDown(KeyCode::Space) ){
-			player = 2;
+			if (input()->getKeyDown(KeyCode::Space) ){
+				bullet->position = tank->position;
+				bullet->rotation.z = tank->barrelrot;
+				bullet->move(5);
+			}
 		}
 		break;
 	case 2:
 		if (isGrounded(tank2->position.y + (tank2->sprite()->height() * tank2->scale.y)) == 0) {
 			tank2->movement();
-		}
-		if (input()->getKeyDown(KeyCode::Space) ){
-			player = 1;
+			if (input()->getKeyDown(KeyCode::Space) ){
+				bullet->position = tank2->position;
+				bullet->rotation.z = tank2->barrelrot;
+				bullet->move(5);
+			}
 		}
 		break;
 	}
 	
 	// ###############################################################
-	// if not grounded adds gravity
+	// checks if player is grounded. if not grounded adds gravity
 	// ###############################################################
 	if (isGrounded(tank->position.y + (tank->sprite()->height() * tank->scale.y)) == 1) {
 		tank->gravity();	
@@ -104,11 +119,12 @@ void MyScene::update(float deltaTime)
 		tank2->sprite()->color = Color::rotate(color, 0.01f);
 		t.start();
 	}
+	resetbullet();
 }
 
 
 // ###############################################################
-// isGrounded checks if a object is hitting the floor
+// isGrounded checks if a object is hitting the floor/ground
 // ###############################################################
 bool MyScene::isGrounded(int posY)
 {
@@ -117,5 +133,27 @@ bool MyScene::isGrounded(int posY)
 	}
 	else {
 		return false;
+	}
+}
+
+
+// ###############################################################
+// changes wich players turn it is
+// ###############################################################
+void MyScene::playerturn()
+{
+	if (player == 1) {
+		player = 2;
+	}
+	if (player == 2) {
+		player = 1;
+	}
+}
+
+void MyScene::resetbullet()
+{
+	if (bullet->position.x <= 0 || bullet->position.x >= SWIDTH) {
+		bullet->position = Point2(-1, -1);
+		bullet->reset();
 	}
 }
