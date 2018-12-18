@@ -3,7 +3,7 @@
 MyTank::MyTank() : Entity()
 {
 	this->addSprite("assets/tank.tga");
-	this->sprite()->color = RED;
+	this->sprite()->color = WHITE;
 
 	//creates the barrel of the tank
 	barrel = new MyBarrel();
@@ -32,12 +32,12 @@ void MyTank::movement()
 {
 	if (position.x >= 17) {
 		if (input()->getKey(KeyCode::A)) {
-			position.x -= 0.05;
+			position.x -= 0.1;
 		}
 	}
 	if (position.x <= SWIDTH - 17) {
 		if (input()->getKey(KeyCode::D)) {
-			position.x += 0.05;
+			position.x += 0.1;
 		}
 	}
 	if (barrel->rotation.z > -3.16){

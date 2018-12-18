@@ -33,8 +33,10 @@ public:
 	virtual void update(float deltaTime);
 
 	bool isGrounded(int posY);
-	void playerturn();
-	void resetbullet();
+	void playerTurn();
+	void resetBullet();
+
+	void bulletHit();
 
 private:
 	/// 2 tanks and a floor

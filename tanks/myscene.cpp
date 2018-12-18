@@ -100,17 +100,17 @@ void MyScene::update(float deltaTime)
 	// ###############################################################
 	// checks if player is grounded. if not grounded adds gravity
 	// ###############################################################
-	if (isGrounded(tank->position.y + (tank->sprite()->height() * tank->scale.y)) == 1) {
+	if (isGrounded(tank->position.y + (tank->sprite()->height() * tank->scale.y))) {
 		tank->gravity();	
 	}
-	if (isGrounded(tank2->position.y + (tank2->sprite()->height() * tank2->scale.y)) == 1) {
+	if (isGrounded(tank2->position.y + (tank2->sprite()->height() * tank2->scale.y))) {
 		tank2->gravity();
 	}
 
 	// ###############################################################
 	// Rotate color
 	// ###############################################################
-	if (t.seconds() > 0.0333f) {
+	/*if (t.seconds() > 0.0333f) {
 		RGBAColor color = tank->sprite()->color;
 		tank->sprite()->color = Color::rotate(color, 0.01f);
 	}
@@ -118,8 +118,8 @@ void MyScene::update(float deltaTime)
 		RGBAColor color = tank2->sprite()->color;
 		tank2->sprite()->color = Color::rotate(color, 0.01f);
 		t.start();
-	}
-	resetbullet();
+	}*/
+	resetBullet();
 }
 
 
@@ -140,7 +140,7 @@ bool MyScene::isGrounded(int posY)
 // ###############################################################
 // changes wich players turn it is
 // ###############################################################
-void MyScene::playerturn()
+void MyScene::playerTurn()
 {
 	if (player == 1) {
 		player = 2;
@@ -150,10 +150,21 @@ void MyScene::playerturn()
 	}
 }
 
-void MyScene::resetbullet()
+void MyScene::resetBullet()
 {
 	if (bullet->position.x <= 0 || bullet->position.x >= SWIDTH) {
 		bullet->position = Point2(-1, -1);
 		bullet->reset();
 	}
+}
+
+void MyScene::bulletHit() 
+{
+	/*int posY = bullet->position.y + ((bullet->sprite()->height() * bullet->scale.y) / 2);
+	int posX = bullet->position.x + ((bullet->sprite()->width() * bullet->scale.x) / 2);
+	
+	if (bullet->position - tank2->position){
+
+	}*/
+	std::cout << (bullet->position - tank2->position) << std::endl;
 }
