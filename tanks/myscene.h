@@ -32,11 +32,11 @@ public:
 	/// @return void
 	virtual void update(float deltaTime);
 
-	bool isGrounded(int posY);
+	bool isGrounded(Entity* a, Entity* b);
 	void playerTurn();
 	void resetBullet();
 
-	void bulletHit();
+	bool collition(Entity* c, Entity* d);
 
 private:
 	/// 2 tanks and a floor
@@ -46,6 +46,7 @@ private:
 	MyBullet* bullet;
 
 	int player;
+	int playerShot;
 
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;

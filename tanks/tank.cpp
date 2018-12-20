@@ -32,12 +32,12 @@ void MyTank::movement()
 {
 	if (position.x >= 17) {
 		if (input()->getKey(KeyCode::A)) {
-			position.x -= 0.1;
+			position.x -= 0.5;
 		}
 	}
 	if (position.x <= SWIDTH - 17) {
 		if (input()->getKey(KeyCode::D)) {
-			position.x += 0.1;
+			position.x += 0.5;
 		}
 	}
 	if (barrel->rotation.z > -3.16){

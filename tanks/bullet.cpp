@@ -2,8 +2,8 @@
 
 MyBullet::MyBullet() : Entity()
 {
-	this->addSprite("assets/square_filled.tga");
-	_velocity = Point2(0,0);
+	this->addSprite("assets/bullet.tga");
+	_velocity = Vector2(0,0);
 }
 
 MyBullet::~MyBullet()
@@ -18,9 +18,7 @@ void MyBullet::update(float deltaTime)
 		
 	}
 	this->position += _velocity;
-	/*if (this->position.x <= 0 || this->position.x >= SWIDTH) {
-		reset();
-	}*/
+	this->rotation.z = _velocity.getAngle();
 }
 
 void MyBullet::move(float speed)
@@ -35,6 +33,7 @@ void MyBullet::move(float degrees, float speed) {
 	float radians = degrees * (PI / 180);
 	_velocity.x += cos(radians) * speed;
 	_velocity.y += sin(radians) * speed;
+
 }
 
 void MyBullet::reset()

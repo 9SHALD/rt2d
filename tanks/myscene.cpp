@@ -14,20 +14,13 @@ MyScene::MyScene() : Scene()
 	// start the timer.
 	t.start();
 
-	// create a single instance of MyEntity in the middle of the screen.
-	// the Sprite is added in Constructor of MyEntity.
+	// create a single instance of all entities on the screen.
 	tank = new MyTank();
 	tank->position = Point2(SWIDTH / 2, SHEIGHT / 1.5);
-
-	// tank 2
 	tank2 = new MyTank();
 	tank2->position = Point2(SWIDTH / 1.5, SHEIGHT / 1.5);
-
-	// floor
 	floor = new MyFloor();
 	floor->position = Point2(SWIDTH / 2, SHEIGHT / 1.2);
-
-	// bullet
 	bullet = new MyBullet();
 	bullet->position = Point2(-1, -1);
 	bullet->sprite()->color = WHITE;
@@ -38,6 +31,7 @@ MyScene::MyScene() : Scene()
 	floor->scale = Point((SWIDTH / 2), 0.2f);
 	bullet->scale = Point2(0.1f, 0.1f);
 	player = 1;
+	playerShot = 0;
 
 
 	// create the scene 'tree'
@@ -76,7 +70,7 @@ void MyScene::update(float deltaTime)
 	// ###############################################################
 	switch (player) {
 	case 1:
-		if (isGrounded(tank->position.y + (tank->sprite()->height() * tank->scale.y)) == 0) {
+		if (isGrounded(tank, floor)) {
 			tank->movement();
 			if (input()->getKeyDown(KeyCode::Space) ){
 				bullet->position = tank->position;
@@ -84,9 +78,13 @@ void MyScene::update(float deltaTime)
 				bullet->move(5);
 			}
 		}
+		if (collition(bullet, tank2)) {
+			bullet->position = Point2(-1, -1);
+			bullet->reset();
+		}
 		break;
 	case 2:
-		if (isGrounded(tank2->position.y + (tank2->sprite()->height() * tank2->scale.y)) == 0) {
+		if (isGrounded(tank2, floor)) {
 			tank2->movement();
 			if (input()->getKeyDown(KeyCode::Space) ){
 				bullet->position = tank2->position;
@@ -94,31 +92,27 @@ void MyScene::update(float deltaTime)
 				bullet->move(5);
 			}
 		}
+		if (collition(bullet, tank)) {
+			bullet->position = Point2(-1, -1);
+			bullet->reset();
+		}
 		break;
+	}
+
+	if (isGrounded(bullet, floor)) {
+		bullet->position = Point2(-1, -1);
+		bullet->reset();
 	}
 	
 	// ###############################################################
 	// checks if player is grounded. if not grounded adds gravity
 	// ###############################################################
-	if (isGrounded(tank->position.y + (tank->sprite()->height() * tank->scale.y))) {
+	if (!isGrounded(tank, floor)) {
 		tank->gravity();	
 	}
-	if (isGrounded(tank2->position.y + (tank2->sprite()->height() * tank2->scale.y))) {
+	if (!isGrounded(tank2, floor)) {
 		tank2->gravity();
 	}
-
-	// ###############################################################
-	// Rotate color
-	// ###############################################################
-	/*if (t.seconds() > 0.0333f) {
-		RGBAColor color = tank->sprite()->color;
-		tank->sprite()->color = Color::rotate(color, 0.01f);
-	}
-	if (t.seconds() > 0.0333f) {
-		RGBAColor color = tank2->sprite()->color;
-		tank2->sprite()->color = Color::rotate(color, 0.01f);
-		t.start();
-	}*/
 	resetBullet();
 }
 
@@ -126,9 +120,11 @@ void MyScene::update(float deltaTime)
 // ###############################################################
 // isGrounded checks if a object is hitting the floor/ground
 // ###############################################################
-bool MyScene::isGrounded(int posY)
+bool MyScene::isGrounded(Entity* a, Entity* b)
 {
-	if ((posY) < (floor->position.y)) {
+	int aPos = a->position.y + (a->sprite()->height() * a->scale.y) / 2;
+	int bPos = b->position.y - (b->sprite()->height() * b->scale.y) / 2;
+	if (aPos > bPos) {
 		return true;
 	}
 	else {
@@ -158,13 +154,14 @@ void MyScene::resetBullet()
 	}
 }
 
-void MyScene::bulletHit() 
+bool MyScene::collition(Entity* c, Entity* d)
 {
-	/*int posY = bullet->position.y + ((bullet->sprite()->height() * bullet->scale.y) / 2);
-	int posX = bullet->position.x + ((bullet->sprite()->width() * bullet->scale.x) / 2);
-	
-	if (bullet->position - tank2->position){
-
-	}*/
-	std::cout << (bullet->position - tank2->position) << std::endl;
+	float eRadius = (c->sprite()->width() * c->scale.x) / 2;
+	float aRadius = (d->sprite()->width() * d->scale.x) / 2;
+	if (sqrt(pow(c->position.x - d->position.x, 2) + pow(c->position.y - d->position.y, 2)) <= eRadius + aRadius) {
+		std::cout << "Hit" << std::endl;
+		return true;
+	} else { 
+		return false; 
+	}
 }

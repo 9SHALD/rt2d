@@ -4,7 +4,7 @@
 MyFloor::MyFloor() : Entity()
 {
 	this->addSprite("assets/square_filled.tga");
-	this->sprite()->color = GREEN;
+	this->sprite()->color = WHITE;
 }
 
 MyFloor::~MyFloor()

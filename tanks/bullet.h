@@ -23,7 +23,7 @@ public:
 	
 private:
 	/* add your private declarations */
-	Point2 _velocity;
+	Vector2 _velocity;
 	float _rotation;
 };
 
