@@ -67,7 +67,8 @@ void MyScene::update(float deltaTime)
 		this->stop();
 	}
 
-	std::cout << (tank->sprite()->height() * tank->scale.y) / 2 << std::endl;
+	//std::cout << tank->getHealth() << std::endl;
+	//std::cout << bullet->getDamage() << std::endl;
 	
 	// ###############################################################
 	// calls the player movement script
@@ -176,6 +177,7 @@ void MyScene::bulletReset() {
 	bullet->position = Point2(-1, -1);
 	bullet->reset();
 	playerSwitch();
+	isAlive();
 	playerShot = false;
 }
 
@@ -187,9 +189,32 @@ bool MyScene::collision(Entity* a, Entity* b)
 	float eRadius = (a->sprite()->width() * a->scale.x) / 2;
 	float aRadius = (b->sprite()->width() * b->scale.x) / 2;
 	if (sqrt(pow(a->position.x - b->position.x, 2) + pow(a->position.y - b->position.y, 2)) <= eRadius + aRadius) {
-		std::cout << "Hit" << std::endl;
+		if (a == bullet && b == tank) {
+			tank->damage(bullet->getDamage());
+			std::cout << tank->getHealth() << std::endl;
+		}
+		if (a == bullet && b == tank2) {
+			tank2->damage(bullet->getDamage());
+			std::cout << tank2->getHealth() << std::endl;
+		}
 		return true;
 	} else { 
 		return false; 
+	}
+}
+
+void MyScene::isAlive() {
+	if (tank->getHealth() <= 0) {
+		tank->position.x = -5;
+		tank->position.y = -5;
+		std::cout << "Player 2 won" << std::endl;
+		player = 3;
+	} else if(tank2->getHealth() <= 0) {
+		tank2->position.x = -5;
+		tank2->position.y = -5;
+		std::cout << "Player 1 won" << std::endl;
+		player = 3;
+	} else {
+		std::cout << "no one died yet" << std::endl;
 	}
 }

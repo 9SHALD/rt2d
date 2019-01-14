@@ -5,6 +5,7 @@ MyBullet::MyBullet() : Entity()
 {
 	this->addSprite("assets/bullet.tga");
 	_velocity = Vector2(0,0);
+	int damage = 0;
 }
 
 MyBullet::~MyBullet()
@@ -41,4 +42,9 @@ void MyBullet::reset()
 {
 	_velocity.x = 0;
 	_velocity.y = 0;
+}
+
+int MyBullet::getDamage() {
+	damage = rand() % 15 + 25;
+	return damage;
 }

@@ -20,11 +20,15 @@ public:
 	void move(float degrees, float speed);
 
 	void reset();
+
+	int getDamage();
 	
 private:
 	/* add your private declarations */
 	Vector2 _velocity;
 	float _rotation;
+	int damage;
+
 };
 
 #endif /* BULLET_H */

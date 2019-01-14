@@ -25,11 +25,17 @@ public:
 	
 	float barrelrot;
 
+	int getHealth();
+	void setHealth(int a);
+	void damage(int a);
+	
+
 private:
 
 	/* add your private declarations */
 	MyBarrel* barrel;
-
+	
+	int health;
 	int shot;
 };
 

@@ -9,6 +9,7 @@ MyTank::MyTank() : Entity()
 	barrel = new MyBarrel();
 	this->addChild(barrel);
 
+	health = 100;
 	shot = 0;
 	barrelrot = barrel->rotation.z;
 }
@@ -74,4 +75,16 @@ void MyTank::gravity()
 
 void MyTank::setBarrelRot(float a) {
 	barrel->rotation.z = a;
+}
+
+int MyTank::getHealth() {
+	return health;
+}
+
+void MyTank::setHealth(int a) {
+	health = a;
+}
+
+void MyTank::damage(int a) {
+	health -= a;
 }

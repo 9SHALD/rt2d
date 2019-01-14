@@ -37,8 +37,8 @@ public:
 	void playerSwitch();
 	void bulletOnScreen();
 	void bulletReset();
-
 	bool collision(Entity* a, Entity* b);
+	void isAlive();
 
 private:
 	/// 2 tanks and a floor
