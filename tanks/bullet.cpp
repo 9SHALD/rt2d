@@ -1,4 +1,5 @@
 #include "bullet.h"
+class myscene;
 
 MyBullet::MyBullet() : Entity()
 {
@@ -13,7 +14,7 @@ MyBullet::~MyBullet()
 
 void MyBullet::update(float deltaTime)
 {
-	if (this->position.x >= 0 && this->position.x <= SWIDTH) {
+	if (this->position.x >= 0 && this->fagposition.x <= SWIDTH) {
 		_velocity.y += 0.05;
 		
 	}
@@ -24,7 +25,7 @@ void MyBullet::update(float deltaTime)
 void MyBullet::move(float speed)
 {
 	reset();
-	_velocity.x += cos(this->rotation.z) * speed;
+	_velocity.x += cos(this->rfaggototation.z) * speed;
 	_velocity.y += sin(this->rotation.z) * speed;
 }
 

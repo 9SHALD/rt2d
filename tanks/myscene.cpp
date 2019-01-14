@@ -16,22 +16,24 @@ MyScene::MyScene() : Scene()
 
 	// create a single instance of all entities on the screen.
 	tank = new MyTank();
-	tank->position = Point2(SWIDTH / 2, SHEIGHT / 1.5);
+	tank->position = Point2(SWIDTH / 4, SHEIGHT / 1.5);
 	tank2 = new MyTank();
-	tank2->position = Point2(SWIDTH / 1.5, SHEIGHT / 1.5);
+	tank2->position = Point2(SWIDTH / 4 * 3, SHEIGHT / 1.5);
 	floor = new MyFloor();
 	floor->position = Point2(SWIDTH / 2, SHEIGHT / 1.2);
 	bullet = new MyBullet();
 	bullet->position = Point2(-1, -1);
 	bullet->sprite()->color = WHITE;
+
 	
 	// sets the scale of all objects
 	tank->scale = Point(0.2f, 0.2f);
 	tank2->scale = Point(0.2f, 0.2f);
 	floor->scale = Point((SWIDTH / 2), 0.2f);
 	bullet->scale = Point2(0.1f, 0.1f);
+	tank2->setBarrelRot(-PI);
 	player = 1;
-	playerShot = 0;
+	playerShot = false;
 
 
 	// create the scene 'tree'
@@ -64,44 +66,19 @@ void MyScene::update(float deltaTime)
 	if (input()->getKeyUp(KeyCode::Escape)) {
 		this->stop();
 	}
+
+	std::cout << (tank->sprite()->height() * tank->scale.y) / 2 << std::endl;
 	
 	// ###############################################################
-	// checks if player is grounded and if player is grounded lets them move
+	// calls the player movement script
 	// ###############################################################
-	switch (player) {
-	case 1:
-		if (isGrounded(tank, floor)) {
-			tank->movement();
-			if (input()->getKeyDown(KeyCode::Space) ){
-				bullet->position = tank->position;
-				bullet->rotation.z = tank->barrelrot;
-				bullet->move(5);
-			}
-		}
-		if (collition(bullet, tank2)) {
-			bullet->position = Point2(-1, -1);
-			bullet->reset();
-		}
-		break;
-	case 2:
-		if (isGrounded(tank2, floor)) {
-			tank2->movement();
-			if (input()->getKeyDown(KeyCode::Space) ){
-				bullet->position = tank2->position;
-				bullet->rotation.z = tank2->barrelrot;
-				bullet->move(5);
-			}
-		}
-		if (collition(bullet, tank)) {
-			bullet->position = Point2(-1, -1);
-			bullet->reset();
-		}
-		break;
-	}
+	playerMove();
 
+	// ###############################################################
+	// checks if the bullet hits the ground;
+	// ###############################################################
 	if (isGrounded(bullet, floor)) {
-		bullet->position = Point2(-1, -1);
-		bullet->reset();
+		bulletReset();
 	}
 	
 	// ###############################################################
@@ -113,7 +90,7 @@ void MyScene::update(float deltaTime)
 	if (!isGrounded(tank2, floor)) {
 		tank2->gravity();
 	}
-	resetBullet();
+	bulletOnScreen();
 }
 
 
@@ -136,29 +113,80 @@ bool MyScene::isGrounded(Entity* a, Entity* b)
 // ###############################################################
 // changes wich players turn it is
 // ###############################################################
-void MyScene::playerTurn()
+void MyScene::playerMove()
 {
+	switch (player) {
+	case 1:
+		if (isGrounded(tank, floor)) {
+			if (playerShot == false) {
+				tank->movement();
+				if (input()->getKeyDown(KeyCode::Space)) {
+					bullet->position = tank->position;
+					bullet->rotation.z = tank->barrelrot;
+					bullet->move(5);
+					playerShot = true;
+				}
+			}
+		}
+		if (collision(bullet, tank2)) {
+			bulletReset();
+		}
+		break;
+	case 2:
+		if (isGrounded(tank2, floor)) {
+			if (playerShot == false) {
+				tank2->movement();
+				if (input()->getKeyDown(KeyCode::Space)) {
+					bullet->position = tank2->position;
+					bullet->rotation.z = tank2->barrelrot;
+					bullet->move(5);
+					playerShot = true;
+				}
+			}
+		}
+		if (collision(bullet, tank)) {
+			bulletReset();
+		}
+		break;
+	}
+}
+
+void MyScene::playerSwitch() {
 	if (player == 1) {
 		player = 2;
-	}
-	if (player == 2) {
+	} else if (player == 2) {
 		player = 1;
 	}
 }
 
-void MyScene::resetBullet()
-{
-	if (bullet->position.x <= 0 || bullet->position.x >= SWIDTH) {
-		bullet->position = Point2(-1, -1);
-		bullet->reset();
+// ###############################################################
+// checks if bullet is on screen. if not reset bullet
+// ###############################################################
+void MyScene::bulletOnScreen() {
+	if (playerShot == true) {
+		if (bullet->position.x >= 0 && bullet->position.x <= SWIDTH && bullet->position.y >= 0 && bullet->position.y <= SHEIGHT) {
+			//Good
+		} else {
+			bulletReset();
+		}
 	}
 }
 
-bool MyScene::collition(Entity* c, Entity* d)
+void MyScene::bulletReset() {
+	bullet->position = Point2(-1, -1);
+	bullet->reset();
+	playerSwitch();
+	playerShot = false;
+}
+
+// ###############################################################
+// collision checks for collision between 2 objects
+// ###############################################################
+bool MyScene::collision(Entity* a, Entity* b)
 {
-	float eRadius = (c->sprite()->width() * c->scale.x) / 2;
-	float aRadius = (d->sprite()->width() * d->scale.x) / 2;
-	if (sqrt(pow(c->position.x - d->position.x, 2) + pow(c->position.y - d->position.y, 2)) <= eRadius + aRadius) {
+	float eRadius = (a->sprite()->width() * a->scale.x) / 2;
+	float aRadius = (b->sprite()->width() * b->scale.x) / 2;
+	if (sqrt(pow(a->position.x - b->position.x, 2) + pow(a->position.y - b->position.y, 2)) <= eRadius + aRadius) {
 		std::cout << "Hit" << std::endl;
 		return true;
 	} else { 

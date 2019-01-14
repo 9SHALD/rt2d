@@ -21,7 +21,8 @@ public:
 	void movement();
 
 	void gravity();
-
+	void setBarrelRot(float a);
+	
 	float barrelrot;
 
 private:

@@ -8,7 +8,7 @@ MyTank::MyTank() : Entity()
 	//creates the barrel of the tank
 	barrel = new MyBarrel();
 	this->addChild(barrel);
-	
+
 	shot = 0;
 	barrelrot = barrel->rotation.z;
 }
@@ -70,4 +70,8 @@ void MyTank::movement()
 void MyTank::gravity()
 {
 	position.y += 1;
+}
+
+void MyTank::setBarrelRot(float a) {
+	barrel->rotation.z = a;
 }
