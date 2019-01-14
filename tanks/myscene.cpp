@@ -79,7 +79,7 @@ void MyScene::update(float deltaTime)
 	// checks if the bullet hits the ground;
 	// ###############################################################
 	if (isGrounded(bullet, floor)) {
-		bulletReset();
+		nextTurn();
 	}
 	
 	// ###############################################################
@@ -130,7 +130,7 @@ void MyScene::playerMove()
 			}
 		}
 		if (collision(bullet, tank2)) {
-			bulletReset();
+			nextTurn();
 		}
 		break;
 	case 2:
@@ -146,7 +146,12 @@ void MyScene::playerMove()
 			}
 		}
 		if (collision(bullet, tank)) {
-			bulletReset();
+			nextTurn();
+		}
+		break;
+	case 3:
+		if (input()->getKeyDown(KeyCode::R)) {
+			reset();
 		}
 		break;
 	}
@@ -168,12 +173,12 @@ void MyScene::bulletOnScreen() {
 		if (bullet->position.x >= 0 && bullet->position.x <= SWIDTH && bullet->position.y >= 0 && bullet->position.y <= SHEIGHT) {
 			//Good
 		} else {
-			bulletReset();
+			nextTurn();
 		}
 	}
 }
 
-void MyScene::bulletReset() {
+void MyScene::nextTurn() {
 	bullet->position = Point2(-1, -1);
 	bullet->reset();
 	playerSwitch();
@@ -203,6 +208,9 @@ bool MyScene::collision(Entity* a, Entity* b)
 	}
 }
 
+// ###############################################################
+// checks if the tanks(players) are alive
+// ###############################################################
 void MyScene::isAlive() {
 	if (tank->getHealth() <= 0) {
 		tank->position.x = -5;
@@ -217,4 +225,17 @@ void MyScene::isAlive() {
 	} else {
 		std::cout << "no one died yet" << std::endl;
 	}
+}
+
+// ###############################################################
+// resets the game back to the starting position
+// ###############################################################
+void MyScene::reset() {
+	tank->position = Point2(SWIDTH / 4, SHEIGHT / 1.5);
+	tank2->position = Point2(SWIDTH / 4 * 3, SHEIGHT / 1.5);
+	tank->setBarrelRot(0);
+	tank2->setBarrelRot(-PI);
+	tank->setHealth(100);
+	tank2->setHealth(100);
+	player = 1;
 }

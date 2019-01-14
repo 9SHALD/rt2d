@@ -36,9 +36,10 @@ public:
 	void playerMove();
 	void playerSwitch();
 	void bulletOnScreen();
-	void bulletReset();
+	void nextTurn();
 	bool collision(Entity* a, Entity* b);
 	void isAlive();
+	void reset();
 
 private:
 	/// 2 tanks and a floor
