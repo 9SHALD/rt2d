@@ -6,6 +6,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 #include "myscene.h"
 
@@ -25,6 +26,29 @@ MyScene::MyScene() : Scene()
 	bullet->position = Point2(-1, -1);
 	bullet->sprite()->color = WHITE;
 
+
+	healthT1 << "Health: " << tank->getHealth();
+	healthT2 << "Health: " << tank2->getHealth();
+	player1Txt << "Player 1";
+	player2Txt << "Player 2";
+
+	healthTxt1 = new Text();
+	healthTxt1->position = Point2(35, 55);
+	healthTxt1->message(healthT1.str());
+	healthTxt1->scale = Point(0.5f, 0.5f);
+	healthTxt2 = new Text();
+	healthTxt2->position = Point2(SWIDTH - 190, 55);
+	healthTxt2->message(healthT2.str());
+	healthTxt2->scale = Point(0.5f, 0.5f);
+
+	player1 = new Text();
+	player1->position = Point2(35, 30);
+	player1->message(player1Txt.str(), RED);
+	player1->scale = Point(0.5f, 0.5f);
+	player2 = new Text();
+	player2->position = Point2(SWIDTH - 190, 30);
+	player2->message(player2Txt.str(), CYAN);
+	player2->scale = Point(0.5f, 0.5f);
 	
 	// sets the scale of all objects
 	tank->scale = Point(0.2f, 0.2f);
@@ -35,6 +59,9 @@ MyScene::MyScene() : Scene()
 	player = 1;
 	playerShot = false;
 
+	tank->sprite()->color = RED;
+	tank2->sprite()->color = CYAN;
+
 
 	// create the scene 'tree'
 	// add myentity to this Scene as a child.
@@ -42,6 +69,11 @@ MyScene::MyScene() : Scene()
 	this->addChild(tank2);
 	this->addChild(floor);
 	this->addChild(bullet);
+	this->addChild(healthTxt1);
+	this->addChild(healthTxt2);
+	this->addChild(player1);
+	this->addChild(player2);
+
 }
 
 
@@ -51,11 +83,21 @@ MyScene::~MyScene()
 	this->removeChild(tank);
 	this->removeChild(tank2);
 	this->removeChild(floor);
+	this->removeChild(bullet);
+	this->removeChild(healthTxt1);
+	this->removeChild(healthTxt2);
+	this->removeChild(player1);
+	this->removeChild(player2);
 
 	// delete myentity from the heap (there was a 'new' in the constructor)
 	delete tank;
 	delete tank2;
 	delete floor;
+	delete bullet;
+	delete healthTxt1;
+	delete healthTxt2;
+	delete player1;
+	delete player2;
 }
 
 void MyScene::update(float deltaTime)
@@ -67,9 +109,6 @@ void MyScene::update(float deltaTime)
 		this->stop();
 	}
 
-	//std::cout << tank->getHealth() << std::endl;
-	//std::cout << bullet->getDamage() << std::endl;
-	
 	// ###############################################################
 	// calls the player movement script
 	// ###############################################################
@@ -181,6 +220,7 @@ void MyScene::bulletOnScreen() {
 void MyScene::nextTurn() {
 	bullet->position = Point2(-1, -1);
 	bullet->reset();
+	updateHealth();
 	playerSwitch();
 	isAlive();
 	playerShot = false;
@@ -213,13 +253,13 @@ bool MyScene::collision(Entity* a, Entity* b)
 // ###############################################################
 void MyScene::isAlive() {
 	if (tank->getHealth() <= 0) {
-		tank->position.x = -5;
-		tank->position.y = -5;
+		tank->position.x = -20;
+		tank->position.y = -20;
 		std::cout << "Player 2 won" << std::endl;
 		player = 3;
 	} else if(tank2->getHealth() <= 0) {
-		tank2->position.x = -5;
-		tank2->position.y = -5;
+		tank2->position.x = -20;
+		tank2->position.y = -20;
 		std::cout << "Player 1 won" << std::endl;
 		player = 3;
 	} else {
@@ -238,4 +278,14 @@ void MyScene::reset() {
 	tank->setHealth(100);
 	tank2->setHealth(100);
 	player = 1;
+}
+
+void MyScene::updateHealth()
+{	
+	healthT1.str(std::string());
+	healthT2.str(std::string());
+	healthT1 << "Health: " << tank->getHealth();
+	healthT2 << "Health: " << tank2->getHealth();
+	healthTxt1->message(healthT1.str());
+	healthTxt2->message(healthT2.str());
 }

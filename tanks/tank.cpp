@@ -25,6 +25,9 @@ void MyTank::update(float deltaTime)
 {
 	barrel->sprite()->color = this->sprite()->color;
 	barrelrot = barrel->rotation.z;
+	if (health < 0) {
+		health = 0;
+	}
 }
 
 
@@ -53,7 +56,6 @@ void MyTank::movement()
 	}
 	if (input()->getKey(KeyCode::Space)) {
 		if (shot == 0) {
-			std::cout << "Shot fired" << std::endl;
 			shot = 1;
 		}
 	}
@@ -61,7 +63,6 @@ void MyTank::movement()
 		for (size_t i = 0; i < 30; i++){
 			if (i == 30) {
 				shot = 0;
-				std::cout << "Shot Ready" << std::endl;
 			}
 		}
 	}

@@ -10,6 +10,7 @@
 #define MYSCENE_H
 
 #include <rt2d/scene.h>
+#include <rt2d/text.h>
 
 #include "tank.h"
 #include "floor.h"
@@ -40,6 +41,7 @@ public:
 	bool collision(Entity* a, Entity* b);
 	void isAlive();
 	void reset();
+	void updateHealth();
 
 private:
 	/// 2 tanks and a floor
@@ -53,6 +55,16 @@ private:
 
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
+
+	Text* healthTxt1;
+	Text* healthTxt2;
+	Text* player1;
+	Text* player2;
+
+	std::stringstream healthT1;
+	std::stringstream healthT2;
+	std::stringstream player1Txt;
+	std::stringstream player2Txt;
 };
 
 #endif /* SCENE00_H */
