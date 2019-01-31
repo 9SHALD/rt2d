@@ -1,7 +1,6 @@
 #include "tank.h"
 
-MyTank::MyTank() : Entity()
-{
+MyTank::MyTank() : Entity() {
 	this->addSprite("assets/tank.tga");
 	this->sprite()->color = WHITE;
 
@@ -10,38 +9,39 @@ MyTank::MyTank() : Entity()
 	this->addChild(barrel);
 
 	health = 100;
+	fuel = 500;
 	shot = 0;
 	barrelrot = barrel->rotation.z;
 }
 
-MyTank::~MyTank()
-{
+MyTank::~MyTank() {
 	this->removeChild(barrel);
 	delete barrel;
 	
 }
 
-void MyTank::update(float deltaTime) 
-{
+void MyTank::update(float deltaTime) {
 	barrel->sprite()->color = this->sprite()->color;
 	barrelrot = barrel->rotation.z;
-	if (health < 0) {
-		health = 0;
-	}
 }
 
 
 // movement for the tank and the barrel
-void MyTank::movement()
-{
-	if (position.x >= 17) {
-		if (input()->getKey(KeyCode::A)) {
-			position.x -= 0.5;
+void MyTank::movement() {
+	if (fuel > 0) {
+		if (position.x >= 17) {
+			if (input()->getKey(KeyCode::A)) {
+				position.x -= 0.5;
+				fuel -= 0.2;
+			}
 		}
 	}
-	if (position.x <= SWIDTH - 17) {
-		if (input()->getKey(KeyCode::D)) {
-			position.x += 0.5;
+	if (fuel > 0) {
+		if (position.x <= SWIDTH - 17) {
+			if (input()->getKey(KeyCode::D)) {
+				position.x += 0.5;
+				fuel -= 0.2;
+			}
 		}
 	}
 	if (barrel->rotation.z > -3.16){
@@ -60,7 +60,7 @@ void MyTank::movement()
 		}
 	}
 	if (shot == 1) {
-		for (size_t i = 0; i < 30; i++){
+		for (size_t i = 0; i < 30; i++) {
 			if (i == 30) {
 				shot = 0;
 			}
@@ -69,8 +69,7 @@ void MyTank::movement()
 }
 
 // gravity for the tank
-void MyTank::gravity()
-{
+void MyTank::gravity() {
 	position.y += 1;
 }
 
@@ -83,9 +82,24 @@ int MyTank::getHealth() {
 }
 
 void MyTank::setHealth(int a) {
+	if (a < 0) {
+		a = 0;
+	}
 	health = a;
 }
 
 void MyTank::damage(int a) {
-	health -= a;
+	if (health < a) {
+		health = 0;
+	} else {
+		health -= a;
+	}
+}
+
+int MyTank::getFuel() {
+	return fuel;
+}
+
+void MyTank::setFuel(int a) {
+	fuel = a;
 }

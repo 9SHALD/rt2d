@@ -27,15 +27,19 @@ public:
 
 	int getHealth();
 	void setHealth(int a);
-	void damage(int a);
 	
+	void damage(int a);
+
+	int getFuel();
+	void setFuel(int a);
 
 private:
 
 	/* add your private declarations */
 	MyBarrel* barrel;
 	
-	int health;
+	unsigned int health;
+	unsigned int fuel;
 	int shot;
 };
 

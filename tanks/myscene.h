@@ -42,29 +42,39 @@ public:
 	void isAlive();
 	void reset();
 	void updateHealth();
+	void updateFuel();
+	void updatePower(float a);
 
 private:
-	/// 2 tanks and a floor
-	MyTank* tank2;
-	MyTank* tank;
+	/// 2 players and a floor
+	MyTank* player2;
+	MyTank* player1;
 	MyFloor* floor;
 	MyBullet* bullet;
 
 	int player;
 	bool playerShot;
+	float powerP1;
+	float powerP2;
 
 	/// @brief a Timer to rotate the color every n seconds
 	Timer t;
 
-	Text* healthTxt1;
-	Text* healthTxt2;
-	Text* player1;
-	Text* player2;
+	Text* start;
+	Text* healthP1;
+	Text* healthP2;
+	Text* playerTxt1;
+	Text* playerTxt2;
+	Text* fuelP1;
+	Text* fuelP2;
+	Text* power;
 
 	std::stringstream healthT1;
 	std::stringstream healthT2;
-	std::stringstream player1Txt;
-	std::stringstream player2Txt;
+	std::stringstream fuelP1Txt;
+	std::stringstream fuelP2Txt;
+	std::stringstream powerTxt;
+	
 };
 
 #endif /* SCENE00_H */

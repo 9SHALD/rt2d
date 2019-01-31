@@ -10,98 +10,131 @@
 
 #include "myscene.h"
 
-MyScene::MyScene() : Scene()
-{
+MyScene::MyScene() : Scene() {
 	// start the timer.
 	t.start();
 
 	// create a single instance of all entities on the screen.
-	tank = new MyTank();
-	tank->position = Point2(SWIDTH / 4, SHEIGHT / 1.5);
-	tank2 = new MyTank();
-	tank2->position = Point2(SWIDTH / 4 * 3, SHEIGHT / 1.5);
+	player1 = new MyTank();
+	player1->position = Point2(SWIDTH / 4, SHEIGHT / 1.3);
+	player2 = new MyTank();
+	player2->position = Point2(SWIDTH / 4 * 3, SHEIGHT / 1.3);
 	floor = new MyFloor();
 	floor->position = Point2(SWIDTH / 2, SHEIGHT / 1.2);
 	bullet = new MyBullet();
 	bullet->position = Point2(-1, -1);
 	bullet->sprite()->color = WHITE;
 
+	player = 4;
+	playerShot = false;
+	powerP1 = 5;
+	powerP2 = 5;
 
-	healthT1 << "Health: " << tank->getHealth();
-	healthT2 << "Health: " << tank2->getHealth();
-	player1Txt << "Player 1";
-	player2Txt << "Player 2";
+	
+	healthT1 << "Health: " << player1->getHealth();
+	healthT2 << "Health: " << player2->getHealth();
+	fuelP1Txt << "Fuel  : " << player1->getFuel();
+	fuelP2Txt << "Fuel  : " << player2->getFuel();
+	powerTxt << "Power: " << powerP1;
+	
+	start = new Text();
+	start->message("Press Space to start");
+	start->position = Point2((SWIDTH / 2) - 240, SHEIGHT / 2);
 
-	healthTxt1 = new Text();
-	healthTxt1->position = Point2(35, 55);
-	healthTxt1->message(healthT1.str());
-	healthTxt1->scale = Point(0.5f, 0.5f);
-	healthTxt2 = new Text();
-	healthTxt2->position = Point2(SWIDTH - 190, 55);
-	healthTxt2->message(healthT2.str());
-	healthTxt2->scale = Point(0.5f, 0.5f);
+	healthP1 = new Text();
+	healthP1->position = Point2(35, 55);
+	healthP1->message(healthT1.str());
+	healthP1->scale = Point(0.5f, 0.5f);
+	healthP2 = new Text();
+	healthP2->position = Point2(SWIDTH - 190, 55);
+	healthP2->message(healthT2.str());
+	healthP2->scale = Point(0.5f, 0.5f);
 
-	player1 = new Text();
-	player1->position = Point2(35, 30);
-	player1->message(player1Txt.str(), RED);
-	player1->scale = Point(0.5f, 0.5f);
-	player2 = new Text();
-	player2->position = Point2(SWIDTH - 190, 30);
-	player2->message(player2Txt.str(), CYAN);
-	player2->scale = Point(0.5f, 0.5f);
+	playerTxt1 = new Text();
+	playerTxt1->position = Point2(35, 30);
+	playerTxt1->message("Player 1", RED);
+	playerTxt1->scale = Point(0.5f, 0.5f);
+	playerTxt2 = new Text();
+	playerTxt2->position = Point2(SWIDTH - 190, 30);
+	playerTxt2->message("Player 2", CYAN);
+	playerTxt2->scale = Point(0.5f, 0.5f);
+
+	fuelP1 = new Text();
+	fuelP1->position = Point2(35, 75);
+	fuelP1->message(fuelP1Txt.str());
+	fuelP1->scale = Point(0.5f, 0.5f);
+	fuelP2 = new Text();
+	fuelP2->position = Point2(SWIDTH - 190, 75);
+	fuelP2->message(fuelP2Txt.str());
+	fuelP2->scale = Point(0.5f, 0.5f);
+
+	power = new Text();
+	power->position = Point2(SWIDTH / 2 - 20, 75);
+	power->message(powerTxt.str());
+	power->scale = Point(0.5f, 0.5f);
+
 	
 	// sets the scale of all objects
-	tank->scale = Point(0.2f, 0.2f);
-	tank2->scale = Point(0.2f, 0.2f);
+	player1->scale = Point(0.2f, 0.2f);
+	player2->scale = Point(0.2f, 0.2f);
 	floor->scale = Point((SWIDTH / 2), 0.2f);
 	bullet->scale = Point2(0.1f, 0.1f);
-	tank2->setBarrelRot(-PI);
-	player = 1;
-	playerShot = false;
+	player2->setBarrelRot(-PI);
 
-	tank->sprite()->color = RED;
-	tank2->sprite()->color = CYAN;
+	player1->sprite()->color = RED;
+	player2->sprite()->color = CYAN;
 
 
 	// create the scene 'tree'
 	// add myentity to this Scene as a child.
-	this->addChild(tank);
-	this->addChild(tank2);
-	this->addChild(floor);
-	this->addChild(bullet);
-	this->addChild(healthTxt1);
-	this->addChild(healthTxt2);
 	this->addChild(player1);
 	this->addChild(player2);
+	this->addChild(floor);
+	this->addChild(bullet);
+	this->addChild(healthP1);
+	this->addChild(healthP2);
+	this->addChild(playerTxt1);
+	this->addChild(playerTxt2);
+	this->addChild(fuelP1);
+	this->addChild(fuelP2);
+	this->addChild(power);
+	this->addChild(start);
 
 }
 
 
-MyScene::~MyScene()
-{
+MyScene::~MyScene() {
 	// deconstruct and delete the Tree
-	this->removeChild(tank);
-	this->removeChild(tank2);
-	this->removeChild(floor);
-	this->removeChild(bullet);
-	this->removeChild(healthTxt1);
-	this->removeChild(healthTxt2);
 	this->removeChild(player1);
 	this->removeChild(player2);
+	this->removeChild(floor);
+	this->removeChild(bullet);
+	this->removeChild(healthP1);
+	this->removeChild(healthP2);
+	this->removeChild(playerTxt1);
+	this->removeChild(playerTxt2);
+	this->removeChild(fuelP1);
+	this->removeChild(fuelP2);
+	this->removeChild(power);
+	this->removeChild(start);
 
 	// delete myentity from the heap (there was a 'new' in the constructor)
-	delete tank;
-	delete tank2;
-	delete floor;
-	delete bullet;
-	delete healthTxt1;
-	delete healthTxt2;
 	delete player1;
 	delete player2;
+	delete floor;
+	delete bullet;
+	delete healthP1;
+	delete healthP2;
+	delete playerTxt1;
+	delete playerTxt2;
+	delete fuelP1;
+	delete fuelP2;
+	delete power;
+	delete start;
 }
 
-void MyScene::update(float deltaTime)
-{
+void MyScene::update(float deltaTime) {
+
 	// ###############################################################
 	// Escape key stops the Scene
 	// ###############################################################
@@ -124,11 +157,11 @@ void MyScene::update(float deltaTime)
 	// ###############################################################
 	// checks if player is grounded. if not grounded adds gravity
 	// ###############################################################
-	if (!isGrounded(tank, floor)) {
-		tank->gravity();	
+	if (!isGrounded(player1, floor)) {
+		player1->gravity();	
 	}
-	if (!isGrounded(tank2, floor)) {
-		tank2->gravity();
+	if (!isGrounded(player2, floor)) {
+		player2->gravity();
 	}
 	bulletOnScreen();
 }
@@ -137,14 +170,12 @@ void MyScene::update(float deltaTime)
 // ###############################################################
 // isGrounded checks if a object is hitting the floor/ground
 // ###############################################################
-bool MyScene::isGrounded(Entity* a, Entity* b)
-{
+bool MyScene::isGrounded(Entity* a, Entity* b) {
 	int aPos = a->position.y + (a->sprite()->height() * a->scale.y) / 2;
 	int bPos = b->position.y - (b->sprite()->height() * b->scale.y) / 2;
 	if (aPos > bPos) {
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 }
@@ -153,44 +184,87 @@ bool MyScene::isGrounded(Entity* a, Entity* b)
 // ###############################################################
 // changes wich players turn it is
 // ###############################################################
-void MyScene::playerMove()
-{
+void MyScene::playerMove() {
 	switch (player) {
 	case 1:
-		if (isGrounded(tank, floor)) {
+		if (isGrounded(player1, floor)) {
 			if (playerShot == false) {
-				tank->movement();
+				player1->movement();
+				if (input()->getKey(KeyCode::A) || input()->getKey(KeyCode::D)) {
+					updateFuel();
+				}
+				if (powerP1 > 2.1 && input()->getKey(KeyCode::Z)){
+					powerP1 -= 0.1;
+					updatePower(powerP1);
+				}
+				if (powerP1 < 10 && input()->getKey(KeyCode::X)) {
+					powerP1 += 0.1;
+					updatePower(powerP1);
+				}
 				if (input()->getKeyDown(KeyCode::Space)) {
-					bullet->position = tank->position;
-					bullet->rotation.z = tank->barrelrot;
-					bullet->move(5);
+					bullet->position = player1->position;
+					bullet->rotation.z = player1->barrelrot;
+					bullet->move(powerP1);
 					playerShot = true;
 				}
 			}
 		}
-		if (collision(bullet, tank2)) {
+		if (collision(bullet, player2)) {
 			nextTurn();
 		}
 		break;
 	case 2:
-		if (isGrounded(tank2, floor)) {
+		if (isGrounded(player2, floor)) {
 			if (playerShot == false) {
-				tank2->movement();
+				player2->movement();
+				if (input()->getKey(KeyCode::A) || input()->getKey(KeyCode::D)) {
+					updateFuel();
+				}
+				if (powerP2 > 2.1 && input()->getKey(KeyCode::Z)) {
+					powerP2 -= 0.1;
+					updatePower(powerP2);
+				}
+				if (powerP2 < 10 && input()->getKey(KeyCode::X)) {
+					powerP2 += 0.1;
+					updatePower(powerP2);
+				}
 				if (input()->getKeyDown(KeyCode::Space)) {
-					bullet->position = tank2->position;
-					bullet->rotation.z = tank2->barrelrot;
-					bullet->move(5);
+					bullet->position = player2->position;
+					bullet->rotation.z = player2->barrelrot;
+					bullet->move(powerP2);
 					playerShot = true;
 				}
 			}
 		}
-		if (collision(bullet, tank)) {
+		if (collision(bullet, player1)) {
 			nextTurn();
 		}
 		break;
 	case 3:
+		for (int i = 0; i < 60; i++) {
+			if (i == 30) {
+				if (player1->getHealth() <= 0) {
+					start->message("Player 2 Won!");
+					start->position = Point2((SWIDTH / 2) - (start->message().size() * 64 / 2), SHEIGHT / 2);
+				}
+				if (player2->getHealth() <= 0) {
+					start->message("Player 1 Won!");
+					start->position = Point2((SWIDTH / 2) - (start->message().size() * 64 / 2), SHEIGHT / 2);
+				}
+			}
+			if (i == 0) {
+				start->message("Use R to restart");
+			}
+		}
 		if (input()->getKeyDown(KeyCode::R)) {
+			start->message("");
 			reset();
+		}
+		break;
+	case 4:
+		if (input()->getKeyDown(KeyCode::Space)) {
+			start->message("");
+			player = 1;
 		}
 		break;
 	}
@@ -199,8 +273,10 @@ void MyScene::playerMove()
 void MyScene::playerSwitch() {
 	if (player == 1) {
 		player = 2;
+		updatePower(powerP2);
 	} else if (player == 2) {
 		player = 1;
+		updatePower(powerP1);
 	}
 }
 
@@ -223,24 +299,25 @@ void MyScene::nextTurn() {
 	updateHealth();
 	playerSwitch();
 	isAlive();
+	player1->setFuel(500);
+	player2->setFuel(500);
 	playerShot = false;
 }
 
 // ###############################################################
 // collision checks for collision between 2 objects
 // ###############################################################
-bool MyScene::collision(Entity* a, Entity* b)
-{
+bool MyScene::collision(Entity* a, Entity* b) {
 	float eRadius = (a->sprite()->width() * a->scale.x) / 2;
 	float aRadius = (b->sprite()->width() * b->scale.x) / 2;
 	if (sqrt(pow(a->position.x - b->position.x, 2) + pow(a->position.y - b->position.y, 2)) <= eRadius + aRadius) {
-		if (a == bullet && b == tank) {
-			tank->damage(bullet->getDamage());
-			std::cout << tank->getHealth() << std::endl;
+		if (a == bullet && b == player1) {
+			player1->damage(bullet->getDamage());
+			std::cout << player1->getHealth() << std::endl;
 		}
-		if (a == bullet && b == tank2) {
-			tank2->damage(bullet->getDamage());
-			std::cout << tank2->getHealth() << std::endl;
+		if (a == bullet && b == player2) {
+			player2->damage(bullet->getDamage());
+			std::cout << player2->getHealth() << std::endl;
 		}
 		return true;
 	} else { 
@@ -252,14 +329,14 @@ bool MyScene::collision(Entity* a, Entity* b)
 // checks if the tanks(players) are alive
 // ###############################################################
 void MyScene::isAlive() {
-	if (tank->getHealth() <= 0) {
-		tank->position.x = -20;
-		tank->position.y = -20;
+	if (player1->getHealth() <= 0) {
+		player1->position.x = -20;
+		player1->position.y = -20;
 		std::cout << "Player 2 won" << std::endl;
 		player = 3;
-	} else if(tank2->getHealth() <= 0) {
-		tank2->position.x = -20;
-		tank2->position.y = -20;
+	} else if(player2->getHealth() <= 0) {
+		player2->position.x = -20;
+		player2->position.y = -20;
 		std::cout << "Player 1 won" << std::endl;
 		player = 3;
 	} else {
@@ -271,21 +348,42 @@ void MyScene::isAlive() {
 // resets the game back to the starting position
 // ###############################################################
 void MyScene::reset() {
-	tank->position = Point2(SWIDTH / 4, SHEIGHT / 1.5);
-	tank2->position = Point2(SWIDTH / 4 * 3, SHEIGHT / 1.5);
-	tank->setBarrelRot(0);
-	tank2->setBarrelRot(-PI);
-	tank->setHealth(100);
-	tank2->setHealth(100);
+	player1->position = Point2(SWIDTH / 4, SHEIGHT / 1.5);
+	player2->position = Point2(SWIDTH / 4 * 3, SHEIGHT / 1.5);
+	player1->setBarrelRot(0);
+	player2->setBarrelRot(-PI);
+	player1->setHealth(100);
+	player2->setHealth(100);
+	player1->setFuel(500);
+	player2->setFuel(500);
+	powerP1 = 5;
+	powerP2 = 5;
+	updateHealth();
+	updateFuel();
+	updatePower(powerP1);
 	player = 1;
 }
 
-void MyScene::updateHealth()
-{	
+void MyScene::updateHealth() {	
 	healthT1.str(std::string());
 	healthT2.str(std::string());
-	healthT1 << "Health: " << tank->getHealth();
-	healthT2 << "Health: " << tank2->getHealth();
-	healthTxt1->message(healthT1.str());
-	healthTxt2->message(healthT2.str());
+	healthT1 << "Health: " << player1->getHealth();
+	healthT2 << "Health: " << player2->getHealth();
+	healthP1->message(healthT1.str());
+	healthP2->message(healthT2.str());
+}
+
+void MyScene::updateFuel() {
+	fuelP1Txt.str(std::string());
+	fuelP2Txt.str(std::string());
+	fuelP1Txt << "Fuel  : " << player1->getFuel();
+	fuelP2Txt << "Fuel  : " << player2->getFuel();
+	fuelP1->message(fuelP1Txt.str());
+	fuelP2->message(fuelP2Txt.str());
+}
+
+void MyScene::updatePower(float a) {
+	powerTxt.str(std::string());
+	powerTxt << "Power: " << a;
+	power->message(powerTxt.str());
 }
